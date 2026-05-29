@@ -78,7 +78,7 @@ export default function MenuPage() {
             </button>
           </div>
         )}
-        <h1 className="section-title">メニューを選ぶ</h1>
+        <h1 className="section-title animate-fadeInUp">メニューを選ぶ</h1>
       </div>
 
       {/* Category tabs */}
@@ -118,10 +118,11 @@ export default function MenuPage() {
         {loading && <LoadingSpinner label="読み込み中..." />}
         {error && <ErrorMessage message={error} />}
 
-        {filtered.map((menu) => (
+        {filtered.map((menu, idx) => (
           <button
             key={menu.id}
             onClick={() => handleSelect(menu)}
+            className={`animate-fadeInUp delay-${Math.min(idx + 1, 5)}`}
             style={{
               display: 'flex',
               alignItems: 'center',

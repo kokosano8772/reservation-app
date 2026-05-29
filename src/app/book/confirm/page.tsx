@@ -73,12 +73,12 @@ export default function ConfirmPage() {
     <div>
       <StepIndicator current={2} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
-        <h1 className="section-title">予約内容の確認</h1>
+        <h1 className="section-title animate-fadeInUp">予約内容の確認</h1>
       </div>
 
       {/* Summary card */}
       <div style={{ padding: '1rem' }}>
-        <div style={{ background: 'var(--salon-accent-light)', border: '1.5px solid var(--salon-accent)', borderRadius: '1rem', padding: '1.25rem', marginBottom: '1rem' }}>
+        <div className="animate-fadeInUp" style={{ background: 'var(--salon-accent-light)', border: '1.5px solid var(--salon-accent)', borderRadius: '1rem', padding: '1.25rem', marginBottom: '1rem' }}>
           <p style={{ fontSize: '0.75rem', color: 'var(--salon-accent)', fontWeight: 600, marginBottom: '0.75rem' }}>予約内容</p>
           {[
             ['✂️ 担当', state.stylist?.name ?? ''],
@@ -166,7 +166,7 @@ export default function ConfirmPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="btn-primary"
+            className="btn-primary animate-fadeInUp delay-2"
             style={{ marginBottom: '1.25rem', fontSize: '1.05rem', letterSpacing: '0.02em' }}
           >
             {submitting ? '予約中...' : '✓ 予約を確定する'}

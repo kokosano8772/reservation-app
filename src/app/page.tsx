@@ -10,7 +10,7 @@ function BookingTab() {
     <>
       <div style={{ padding: '1.5rem 1.25rem' }}>
         <Link href="/book/stylist" style={{ display: 'block', textDecoration: 'none' }}>
-          <div style={{
+          <div className="animate-fadeInUp delay-2" style={{
             background: 'var(--salon-accent)',
             color: 'white',
             borderRadius: '9999px',
@@ -29,8 +29,8 @@ function BookingTab() {
       </div>
 
       <div style={{ padding: '0 1rem', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
-        {[['✂️', 'スタイリスト指名'], ['🕐', '24時間予約可'], ['⭐', 'リピーター優遇']].map(([icon, label]) => (
-          <div key={label} className="card" style={{ padding: '1rem 0.75rem', textAlign: 'center' }}>
+        {[['✂️', 'スタイリスト指名'], ['🕐', '24時間予約可'], ['⭐', 'リピーター優遇']].map(([icon, label], i) => (
+          <div key={label} className={`card animate-fadeInUp delay-${i + 1}`} style={{ padding: '1rem 0.75rem', textAlign: 'center' }}>
             <div style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{icon}</div>
             <p style={{ fontSize: '0.7rem', fontWeight: 600, lineHeight: 1.4 }}>{label}</p>
           </div>
@@ -38,7 +38,7 @@ function BookingTab() {
       </div>
 
       <div style={{ padding: '0 1rem 2rem' }}>
-        <Link href="/my/reservations" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', border: '1px solid var(--salon-border)', borderRadius: '0.75rem', padding: '1rem 1.25rem', textDecoration: 'none', color: 'var(--salon-primary)' }}>
+        <Link href="/my/reservations" className="animate-fadeInUp delay-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', border: '1px solid var(--salon-border)', borderRadius: '0.75rem', padding: '1rem 1.25rem', textDecoration: 'none', color: 'var(--salon-primary)' }}>
           <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>予約確認・変更</span>
           <span>›</span>
         </Link>
@@ -102,7 +102,7 @@ export default function Home() {
       {/* Hero */}
       <div style={{ background: 'var(--salon-primary)', color: 'white', padding: '3rem 1.5rem 2.5rem', textAlign: 'center' }}>
         <p style={{ fontSize: '0.7rem', letterSpacing: '0.25em', opacity: 0.6, marginBottom: '0.5rem' }}>HAIR SALON</p>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>KOKO DESIGN</h1>
+        <h1 className="animate-fadeInUp" style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>KOKO DESIGN</h1>
         <p style={{ fontSize: '0.875rem', opacity: 0.7, lineHeight: 1.7 }}>名古屋 鶴舞<br />10:00〜20:00 / 火曜定休</p>
       </div>
 

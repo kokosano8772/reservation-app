@@ -58,14 +58,14 @@ function CompleteContent() {
   if (error || !detail) {
     return (
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '2rem 1rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-        <h1 style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+        <div className="animate-fadeIn" style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+        <h1 className="animate-fadeInUp" style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: '0.5rem' }}>
           ご予約ありがとうございます
         </h1>
         <p style={{ color: 'var(--salon-muted)', fontSize: '0.875rem', marginBottom: '2rem' }}>
           予約が確定しました。確認メッセージをご確認ください。
         </p>
-        <Link href="/" className="btn-primary" style={{ display: 'block', textDecoration: 'none', textAlign: 'center' }}>
+        <Link href="/" className="btn-primary animate-fadeInUp delay-2" style={{ display: 'block', textDecoration: 'none', textAlign: 'center' }}>
           トップに戻る
         </Link>
       </div>
@@ -84,6 +84,7 @@ function CompleteContent() {
         }}
       >
         <div
+          className="animate-fadeIn"
           style={{
             width: 64,
             height: 64,
@@ -98,7 +99,7 @@ function CompleteContent() {
         >
           ✓
         </div>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>
+        <h1 className="animate-fadeInUp" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>
           ご予約が確定しました
         </h1>
         <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>
@@ -109,7 +110,7 @@ function CompleteContent() {
       {/* Reservation detail card */}
       <div style={{ padding: '1.25rem 1rem' }}>
         <div
-          className="card"
+          className="card animate-fadeInUp delay-1"
           style={{ padding: '1.25rem', marginBottom: '1rem' }}
         >
           <p
@@ -196,7 +197,7 @@ function CompleteContent() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <Link
             href="/book/stylist"
-            className="btn-primary"
+            className="btn-primary animate-fadeInUp delay-2"
             style={{ display: 'block', textDecoration: 'none', textAlign: 'center', padding: '1rem' }}
           >
             別の予約を追加する

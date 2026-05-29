@@ -36,7 +36,7 @@ export default function StylistPage() {
     <div>
       <StepIndicator current={0} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
-        <h1 className="section-title">スタイリストを選ぶ</h1>
+        <h1 className="section-title animate-fadeInUp">スタイリストを選ぶ</h1>
         <p style={{ fontSize: '0.875rem', color: 'var(--salon-muted)', marginTop: '0.25rem' }}>
           担当してほしいスタイリストを選んでください
         </p>
@@ -46,10 +46,11 @@ export default function StylistPage() {
         {loading && <LoadingSpinner label="読み込み中..." />}
         {error && <ErrorMessage message={error} />}
 
-        {stylists.map((s) => (
+        {stylists.map((s, idx) => (
           <button
             key={s.id}
             onClick={() => handleSelect(s)}
+            className={`animate-fadeInUp delay-${Math.min(idx + 1, 5)}`}
             style={{
               display: 'flex',
               alignItems: 'flex-start',

@@ -27,6 +27,7 @@ body {
   background: white;
   border-radius: 1rem;
   border: 1px solid var(--salon-border);
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .step-indicator {
@@ -121,3 +122,33 @@ body {
 .slots-fade-in {
   animation: slotsIn 0.2s ease-out;
 }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease both;
+}
+
+.btn-primary:active:not(:disabled),
+.btn-outline:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.10s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.20s; }
+.delay-5 { animation-delay: 0.25s; }
