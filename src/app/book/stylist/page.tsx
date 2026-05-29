@@ -16,12 +16,13 @@ export default function StylistPage() {
 
   useEffect(() => {
     fetch('/api/stylists')
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data)) setStylists(data)
-        else setError('スタイリスト情報の取得に失敗しました')
+      .then(async (r) => {
+        const body = await r.json()
+        if (!r.ok) throw new Error(body.error ?? 'サーバーエラー')
+        if (!Array.isArray(body)) throw new Error('レスポンス形式が不正です')
+        setStylists(body)
       })
-      .catch(() => setError('通信エラーが発生しました'))
+      .catch((e) => setError(e.message ?? 'スタイリスト情報の取得に失敗しました'))
       .finally(() => setLoading(false))
   }, [])
 
