@@ -8,6 +8,8 @@
   --background: #f7f7f7;
   --salon-bg: #f8f8f8;
   --salon-muted: #777;
+  --salon-available: #52b788;
+  --salon-warning: #f48c42;
 }
 
 * {
@@ -99,4 +101,23 @@ body {
   cursor: not-allowed;
   background: #f3f4f6;
   border-color: var(--salon-border);
+}
+
+@keyframes tapBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slotsIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.calendar-day-tapped {
+  animation: tapBounce 0.2s ease-out;
+}
+
+.slots-fade-in {
+  animation: slotsIn 0.2s ease-out;
 }

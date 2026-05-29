@@ -1,6 +1,6 @@
 'use client'
 // src/app/book/datetime/page.tsx
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { format, addDays, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isBefore, startOfToday, isSameDay } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -9,6 +9,8 @@ import { StepIndicator, LoadingSpinner } from '@/components/ui/Header'
 import type { TimeSlot } from '@/types'
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土']
+
+type DayAvail = 'open' | 'low' | 'full' | 'loading'
 
 export default function DatetimePage() {
   const router = useRouter()
@@ -21,12 +23,59 @@ export default function DatetimePage() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [isHoliday, setIsHoliday] = useState(false)
+  const [monthAvail, setMonthAvail] = useState<Record<string, DayAvail>>({})
+  const [tappedDate, setTappedDate] = useState<string | null>(null)
+  const [slotsKey, setSlotsKey] = useState(0)
+  const fetchBatchRef = useRef(0)
+
   const state = typeof window !== 'undefined' ? getBookingState() : null
 
   useEffect(() => {
-    if (!state?.stylist || !state?.menu) { router.replace('/book/menu'); }
+    if (!state?.stylist || !state?.menu) { router.replace('/book/menu') }
   }, [])
 
+  // ── 変更1: 表示月の全日付の空き状況を一括取得 ──────────────────────────
+  useEffect(() => {
+    // おまかせ or 状態未確定の場合はバッジ不要
+    if (!state?.stylist || state.stylist.id === 'any' || !state?.menu) return
+
+    const stylistId = state.stylist.id
+    const duration = state.menu.duration_minutes
+    const batchId = ++fetchBatchRef.current
+
+    const targets = eachDayOfInterval({ start: startOfMonth(viewMonth), end: endOfMonth(viewMonth) })
+      .filter(d => !isBefore(d, today) && isBefore(d, maxDate))
+
+    // まず全対象日を 'loading' で初期化
+    const initial: Record<string, DayAvail> = {}
+    targets.forEach(d => { initial[format(d, 'yyyy-MM-dd')] = 'loading' })
+    setMonthAvail(initial)
+
+    // 並行フェッチ — 各日の結果が届いた順に反映
+    targets.forEach(async (day) => {
+      const dateStr = format(day, 'yyyy-MM-dd')
+      try {
+        const params = new URLSearchParams({ stylistId, date: dateStr, duration: String(duration) })
+        const res = await fetch(`/api/reservations/slots?${params}`)
+        const data = await res.json()
+        const available = (data.slots ?? []).filter((s: TimeSlot) => s.available).length
+        const status: DayAvail = (data.holiday || available === 0) ? 'full'
+          : available <= 2 ? 'low'
+          : 'open'
+        setMonthAvail(prev => {
+          if (fetchBatchRef.current !== batchId) return prev  // 月切替後の古い結果を無視
+          return { ...prev, [dateStr]: status }
+        })
+      } catch {
+        setMonthAvail(prev => {
+          if (fetchBatchRef.current !== batchId) return prev
+          return { ...prev, [dateStr]: 'full' }
+        })
+      }
+    })
+  }, [viewMonth]) // 月切替のたびに再取得
+
+  // ── 既存: 日付選択時の時間スロット取得（変更なし）──────────────────────
   const fetchSlots = useCallback(async (date: Date) => {
     if (!state?.stylist || !state?.menu) return
     setLoadingSlots(true)
@@ -35,7 +84,6 @@ export default function DatetimePage() {
     const dateStr = format(date, 'yyyy-MM-dd')
     const stylistId = state.stylist.id === 'any' ? '' : state.stylist.id
     if (!stylistId) {
-      // "Any" stylist - use default slots
       setSlots(generateDefaultSlots(state.menu.duration_minutes))
       setLoadingSlots(false)
       return
@@ -64,8 +112,13 @@ export default function DatetimePage() {
     return slots
   }
 
+  // ── 変更2: タップアニメーション付き日付選択 ──────────────────────────────
   function handleDateSelect(date: Date) {
+    const dateStr = format(date, 'yyyy-MM-dd')
+    setTappedDate(dateStr)
+    setTimeout(() => setTappedDate(null), 200)
     setSelectedDate(date)
+    setSlotsKey(k => k + 1)  // スロット欄を再マウント → fadeIn 再生
     fetchSlots(date)
   }
 
@@ -76,11 +129,11 @@ export default function DatetimePage() {
     setTimeout(() => router.push('/book/confirm'), 150)
   }
 
-  // Build calendar grid
+  // カレンダーグリッド構築
   const firstDay = startOfMonth(viewMonth)
   const lastDay = endOfMonth(viewMonth)
   const days = eachDayOfInterval({ start: firstDay, end: lastDay })
-  const startPad = getDay(firstDay) // 0=Sun
+  const startPad = getDay(firstDay)
 
   const prevMonth = () => setViewMonth(d => new Date(d.getFullYear(), d.getMonth() - 1, 1))
   const nextMonth = () => setViewMonth(d => new Date(d.getFullYear(), d.getMonth() + 1, 1))
@@ -102,24 +155,25 @@ export default function DatetimePage() {
         <h1 className="section-title">日時を選ぶ</h1>
       </div>
 
-      {/* Calendar */}
+      {/* カレンダー */}
       <div style={{ padding: '0.75rem 1rem 0' }}>
         <div style={{ background: 'white', border: '1px solid var(--salon-border)', borderRadius: '1rem', padding: '1rem' }}>
-          {/* Month nav */}
+
+          {/* 月ナビ */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
             <button onClick={prevMonth} style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--salon-border)', background: 'white', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
             <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{format(viewMonth, 'yyyy年M月', { locale: ja })}</span>
             <button onClick={nextMonth} style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid var(--salon-border)', background: 'white', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
           </div>
 
-          {/* Weekday headers */}
+          {/* 曜日ヘッダー */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, marginBottom: 4 }}>
             {WEEKDAYS.map((d, i) => (
               <div key={d} style={{ textAlign: 'center', fontSize: '0.7rem', fontWeight: 600, padding: '0.25rem 0', color: i === 0 ? '#ef4444' : i === 6 ? '#3b82f6' : 'var(--salon-muted)' }}>{d}</div>
             ))}
           </div>
 
-          {/* Day grid */}
+          {/* 日付グリッド */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
             {Array.from({ length: startPad }).map((_, i) => <div key={`pad-${i}`} />)}
             {days.map((day) => {
@@ -130,20 +184,53 @@ export default function DatetimePage() {
               const isSun = getDay(day) === 0
               const isSat = getDay(day) === 6
               const disabled = isPast || isTooFar
+              const dateStr = format(day, 'yyyy-MM-dd')
+              const avail = monthAvail[dateStr]
+              const isFull = !disabled && avail === 'full'
+
+              // ── 変更1: バッジ用ドットの色 ──
+              const dotColor = avail === 'open' ? 'var(--salon-available)'
+                : avail === 'low' ? 'var(--salon-warning)'
+                : 'transparent'
 
               return (
                 <button
                   key={day.toISOString()}
                   onClick={() => !disabled && handleDateSelect(day)}
-                  className={`calendar-day ${disabled ? 'past' : 'available'} ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
+                  // ── 変更2: タップ時にスケールアニメーション ──
+                  className={tappedDate === dateStr ? 'calendar-day-tapped' : undefined}
                   style={{
-                    color: isSelected ? 'white' : isSun ? '#ef4444' : isSat ? '#3b82f6' : undefined,
-                    cursor: disabled ? 'not-allowed' : 'pointer',
-                    background: 'none',
+                    padding: '0.2rem 0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    minHeight: 40,
+                    borderRadius: '50%',
                     border: 'none',
+                    // ── 変更1: 選択済み → accent / 満員 → border色でグレー ──
+                    background: isSelected ? 'var(--salon-accent)' : 'none',
+                    color: isSelected ? 'white'
+                      : disabled || isFull ? 'var(--salon-border)'
+                      : isSun ? '#ef4444'
+                      : isSat ? '#3b82f6'
+                      : 'inherit',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  {format(day, 'd')}
+                  <span style={{ fontSize: '0.875rem', lineHeight: 1 }}>{format(day, 'd')}</span>
+                  {/* ── 変更1: 空き状況バッジ（おまかせ以外・未来日のみ）── */}
+                  {!disabled && (
+                    <span style={{
+                      display: 'block',
+                      width: 5,
+                      height: 5,
+                      borderRadius: '50%',
+                      marginTop: 3,
+                      background: isSelected ? 'rgba(255,255,255,0.7)' : dotColor,
+                      flexShrink: 0,
+                    }} />
+                  )}
                 </button>
               )
             })}
@@ -151,9 +238,9 @@ export default function DatetimePage() {
         </div>
       </div>
 
-      {/* Time slots */}
+      {/* 時間スロット ── 変更2: key でフォース再マウント → fadeIn 毎回発火 */}
       {selectedDate && (
-        <div style={{ padding: '1rem' }}>
+        <div key={slotsKey} className="slots-fade-in" style={{ padding: '1rem' }}>
           <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.75rem', color: 'var(--salon-primary)' }}>
             {format(selectedDate, 'M月d日(E)', { locale: ja })} の空き時間
           </p>
@@ -172,6 +259,7 @@ export default function DatetimePage() {
             </p>
           )}
 
+          {/* ── 変更3: 時間スロットのデザインは完全に現状維持 ── */}
           {!loadingSlots && slots.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.625rem' }}>
               {slots.map((slot) => (
