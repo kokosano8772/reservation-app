@@ -3,6 +3,7 @@
 :root {
   --salon-primary: #1a1a1a;
   --salon-accent: #c48b73;
+  --salon-accent-light: #fdf0eb;
   --salon-border: #e5e5e5;
   --background: #f7f7f7;
   --salon-bg: #f8f8f8;
@@ -46,4 +47,25 @@ body {
 
 .step-dot.done {
   background: var(--salon-primary);
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  background: var(--salon-accent);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  padding: 1.1rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
