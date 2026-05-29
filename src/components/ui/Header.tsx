@@ -57,7 +57,7 @@ export function Header({ title, backHref, showLogo }: Props) {
               color: 'var(--salon-primary)',
             }}
           >
-            BLOOM HAIR
+            KOKO DESIGN
           </span>
         )}
         {title && (

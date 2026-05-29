@@ -6,17 +6,25 @@ export default function Home() {
     <div style={{ maxWidth: 480, margin: '0 auto', minHeight: '100dvh' }}>
       <div style={{ background: 'var(--salon-primary)', color: 'white', padding: '3rem 1.5rem 2.5rem', textAlign: 'center' }}>
         <p style={{ fontSize: '0.7rem', letterSpacing: '0.25em', opacity: 0.6, marginBottom: '0.5rem' }}>HAIR SALON</p>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>BLOOM HAIR</h1>
-        <p style={{ fontSize: '0.875rem', opacity: 0.7, lineHeight: 1.7 }}>渋谷区神宮前 2-XX-XX<br />10:00〜20:00 / 火曜定休</p>
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>KOKO DESIGN</h1>
+        <p style={{ fontSize: '0.875rem', opacity: 0.7, lineHeight: 1.7 }}>名古屋 鶴舞<br />10:00〜20:00 / 火曜定休</p>
       </div>
-      <div style={{ padding: '1.5rem 1rem' }}>
+      <div style={{ padding: '1.5rem 1.25rem' }}>
         <Link href="/book/stylist" style={{ display: 'block', textDecoration: 'none' }}>
-          <div style={{ background: 'var(--salon-accent)', color: 'white', borderRadius: '1rem', padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <p style={{ fontSize: '0.75rem', opacity: 0.85, marginBottom: '0.25rem' }}>今すぐ</p>
-              <p style={{ fontSize: '1.25rem', fontWeight: 700 }}>ご予約はこちら</p>
-            </div>
-            <span style={{ fontSize: '1.5rem' }}>›</span>
+          <div style={{
+            background: 'var(--salon-accent)',
+            color: 'white',
+            borderRadius: '9999px',
+            padding: '1.1rem 2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
+            gap: '0.15rem',
+          }}>
+            <p style={{ fontSize: '0.7rem', opacity: 0.85, letterSpacing: '0.12em' }}>今すぐ</p>
+            <p style={{ fontSize: '1.2rem', fontWeight: 700, letterSpacing: '0.05em' }}>ご予約はこちら ›</p>
           </div>
         </Link>
       </div>

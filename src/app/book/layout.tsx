@@ -31,7 +31,7 @@ export default function BookLayout({ children }: { children: React.ReactNode }) 
                 color: 'var(--salon-primary)',
               }}
             >
-              BLOOM HAIR
+              KOKO DESIGN
             </span>
           </Link>
           <span
