@@ -173,13 +173,12 @@ export default function DatetimePage() {
           )}
 
           {!loadingSlots && slots.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.625rem' }}>
               {slots.map((slot) => (
                 <button
                   key={slot.time}
                   onClick={() => slot.available && handleTimeSelect(slot.time)}
                   className={`time-slot ${slot.available ? 'available' : 'unavailable'} ${selectedTime === slot.time ? 'selected' : ''}`}
-                  style={{ background: 'white', border: '1px solid var(--salon-border)' }}
                 >
                   {slot.time}
                 </button>
