@@ -2,7 +2,7 @@
 // src/app/book/menu/page.tsx
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getBookingState, setMenu } from '@/lib/bookingStore'
+import { setMenu } from '@/lib/bookingStore'
 import { CATEGORY_LABELS, formatPrice, formatDuration } from '@/lib/utils'
 import { LoadingSpinner, ErrorMessage, StepIndicator } from '@/components/ui/Header'
 import type { Menu, MenuCategory } from '@/types'
@@ -16,8 +16,6 @@ export default function MenuPage() {
   const [error, setError] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState<MenuCategory | 'all'>('all')
-
-  const state = typeof window !== 'undefined' ? getBookingState() : null
 
   useEffect(() => {
     fetch('/api/menus')
@@ -46,37 +44,7 @@ export default function MenuPage() {
     <div>
       <StepIndicator current={0} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
-        {state?.stylist && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              marginBottom: '0.75rem',
-              padding: '0.625rem 0.875rem',
-              background: 'var(--salon-accent-light)',
-              borderRadius: '0.75rem',
-            }}
-          >
-            <span style={{ fontSize: '0.75rem', color: 'var(--salon-accent)', fontWeight: 600 }}>
-              担当：{state.stylist.name}
-            </span>
-            <button
-              onClick={() => router.push('/book/stylist')}
-              style={{
-                marginLeft: 'auto',
-                fontSize: '0.7rem',
-                color: 'var(--salon-muted)',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              変更
-            </button>
-          </div>
-        )}
+
         <h1 className="section-title animate-fadeInUp">メニューを選ぶ</h1>
       </div>
 
