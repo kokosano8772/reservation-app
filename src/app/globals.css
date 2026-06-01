@@ -134,21 +134,31 @@ body {
 }
 
 .animate-fadeInUp {
-  animation: fadeInUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (min-width: 768px) {
+  .animate-fadeInUp {
+    animation-duration: 0.7s;
+  }
 }
 
 .animate-fadeIn {
   animation: fadeIn 0.25s ease both;
 }
 
-.btn-primary:active:not(:disabled),
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
 .btn-outline:active {
   transform: scale(0.97);
   transition: transform 0.1s ease;
 }
 
-.delay-1 { animation-delay: 0.05s; }
-.delay-2 { animation-delay: 0.10s; }
-.delay-3 { animation-delay: 0.15s; }
-.delay-4 { animation-delay: 0.20s; }
-.delay-5 { animation-delay: 0.25s; }
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
