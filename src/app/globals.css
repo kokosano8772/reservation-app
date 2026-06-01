@@ -147,15 +147,10 @@ body {
   animation: fadeIn 0.25s ease both;
 }
 
-.btn-primary:active:not(:disabled) {
-  transform: scale(0.97);
-  transition: transform 0.1s ease;
-}
-
-.btn-outline:active {
-  transform: scale(0.97);
-  transition: transform 0.1s ease;
-}
+.btn-primary:hover:not(:disabled) { transform: scale(0.98); }
+.btn-primary:active:not(:disabled) { transform: scale(0.95); transition: transform 0.1s ease; }
+.btn-outline:hover { transform: scale(0.98); }
+.btn-outline:active { transform: scale(0.95); transition: transform 0.1s ease; }
 
 .delay-1 { animation-delay: 0.08s; }
 .delay-2 { animation-delay: 0.16s; }
