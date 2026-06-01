@@ -65,7 +65,7 @@ body {
   letter-spacing: 0.05em;
   text-align: center;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s ease;
 }
 
 .btn-primary:disabled {
@@ -134,7 +134,7 @@ body {
 }
 
 .animate-fadeInUp {
-  animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: fadeInUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @media (min-width: 768px) {
