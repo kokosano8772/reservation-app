@@ -20,7 +20,6 @@ export default function MenuPage() {
   const state = typeof window !== 'undefined' ? getBookingState() : null
 
   useEffect(() => {
-    if (!state?.stylist) { router.replace('/book/stylist'); return }
     fetch('/api/menus')
       .then((r) => r.json())
       .then((data) => {
@@ -34,7 +33,7 @@ export default function MenuPage() {
   function handleSelect(menu: Menu) {
     setSelectedId(menu.id)
     setMenu(menu)
-    setTimeout(() => router.push('/book/datetime'), 150)
+    setTimeout(() => router.push('/book/stylist'), 150)
   }
 
   const categories = CATEGORY_ORDER.filter((c) =>
@@ -45,7 +44,7 @@ export default function MenuPage() {
 
   return (
     <div>
-      <StepIndicator current={1} total={3} />
+      <StepIndicator current={0} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
         {state?.stylist && (
           <div

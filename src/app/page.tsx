@@ -9,7 +9,7 @@ function BookingTab() {
   return (
     <>
       <div style={{ padding: '1.5rem 1.25rem' }}>
-        <Link href="/book/stylist" style={{ display: 'block', textDecoration: 'none' }}>
+        <Link href="/book/menu" style={{ display: 'block', textDecoration: 'none' }}>
           <div className="btn-primary animate-fadeInUp delay-2" style={{
             background: 'var(--salon-accent)',
             color: 'white',

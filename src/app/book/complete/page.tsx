@@ -196,7 +196,7 @@ function CompleteContent() {
         {/* Action buttons */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <Link
-            href="/book/stylist"
+            href="/book/menu"
             className="btn-primary animate-fadeInUp delay-2"
             style={{ display: 'block', textDecoration: 'none', textAlign: 'center', padding: '1rem' }}
           >

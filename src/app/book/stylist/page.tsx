@@ -2,7 +2,7 @@
 // src/app/book/stylist/page.tsx
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { setStylist } from '@/lib/bookingStore'
+import { getBookingState, setStylist } from '@/lib/bookingStore'
 import { RANK_LABELS } from '@/lib/utils'
 import { LoadingSpinner, ErrorMessage, StepIndicator } from '@/components/ui/Header'
 import type { Stylist } from '@/types'
@@ -15,6 +15,7 @@ export default function StylistPage() {
   const [selected, setSelected] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!getBookingState().menu) { router.replace('/book/menu'); return }
     fetch('/api/stylists')
       .then(async (r) => {
         const body = await r.json()
@@ -29,12 +30,12 @@ export default function StylistPage() {
   function handleSelect(stylist: Stylist) {
     setSelected(stylist.id)
     setStylist(stylist)
-    setTimeout(() => router.push('/book/menu'), 150)
+    setTimeout(() => router.push('/book/datetime'), 150)
   }
 
   return (
     <div>
-      <StepIndicator current={0} total={3} />
+      <StepIndicator current={1} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
         <h1 className="section-title animate-fadeInUp">スタイリストを選ぶ</h1>
         <p style={{ fontSize: '0.875rem', color: 'var(--salon-muted)', marginTop: '0.25rem' }}>
@@ -171,7 +172,7 @@ export default function StylistPage() {
                 is_active: true,
                 created_at: '',
               })
-              router.push('/book/menu')
+              router.push('/book/datetime')
             }}
             style={{
               display: 'flex',

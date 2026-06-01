@@ -253,7 +253,7 @@ export default function MyReservationsPage() {
       {searched && (
         <div style={{ marginTop: '0.5rem' }}>
           <Link
-            href="/book/stylist"
+            href="/book/menu"
             className="btn-primary"
             style={{ display: 'block', textDecoration: 'none', textAlign: 'center', padding: '1rem' }}
           >
