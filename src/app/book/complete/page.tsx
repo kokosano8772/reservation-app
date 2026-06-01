@@ -83,26 +83,49 @@ function CompleteContent() {
           textAlign: 'center',
         }}
       >
-        <div
-          className="animate-fadeIn"
-          style={{
-            width: 64,
-            height: 64,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.75rem',
-            margin: '0 auto 1rem',
-          }}
-        >
-          ✓
+        <div style={{ margin: '0 auto 1rem', width: 64, height: 64 }}>
+          <style>{`
+            @keyframes svgCircle {
+              from { stroke-dashoffset: 176; }
+              to   { stroke-dashoffset: 0; }
+            }
+            @keyframes svgCheck {
+              from { stroke-dashoffset: 50; }
+              to   { stroke-dashoffset: 0; }
+            }
+          `}</style>
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle
+              cx="32" cy="32" r="28"
+              transform="rotate(-90 32 32)"
+              stroke="var(--salon-accent)"
+              strokeWidth="3"
+              fill="none"
+              style={{
+                strokeDasharray: 176,
+                strokeDashoffset: 176,
+                animation: 'svgCircle 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+              }}
+            />
+            <path
+              d="M17 31 L27 41 L47 21"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+              style={{
+                strokeDasharray: 50,
+                strokeDashoffset: 50,
+                animation: 'svgCheck 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both',
+              }}
+            />
+          </svg>
         </div>
         <h1 className="animate-fadeInUp" style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>
           ご予約が確定しました
         </h1>
-        <p style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+        <p className="animate-fadeInUp delay-1" style={{ fontSize: '0.8rem', opacity: 0.7 }}>
           {detail.customer.name} 様、ご予約ありがとうございます
         </p>
       </div>
@@ -140,9 +163,10 @@ function CompleteContent() {
                 ? `¥${detail.menu.price.toLocaleString()}〜¥${detail.menu.price_max.toLocaleString()}`
                 : `¥${detail.menu.price.toLocaleString()}`,
             },
-          ].map(({ icon, label, value }) => (
+          ].map(({ icon, label, value }, idx) => (
             <div
               key={label}
+              className={`animate-fadeInUp delay-${idx + 1}`}
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -163,7 +187,7 @@ function CompleteContent() {
           ))}
 
           {detail.notes && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+            <div className="animate-fadeInUp delay-5" style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
               <span style={{ fontSize: '1rem', width: 22, flexShrink: 0 }}>📝</span>
               <div>
                 <p style={{ fontSize: '0.7rem', color: 'var(--salon-muted)', marginBottom: '0.125rem' }}>ご要望</p>
