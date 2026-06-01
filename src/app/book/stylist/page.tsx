@@ -14,6 +14,8 @@ export default function StylistPage() {
   const [error, setError] = useState('')
   const [selected, setSelected] = useState<string | null>(null)
 
+  const state = typeof window !== 'undefined' ? getBookingState() : null
+
   useEffect(() => {
     if (!getBookingState().menu) { router.replace('/book/menu'); return }
     fetch('/api/stylists')
@@ -37,6 +39,37 @@ export default function StylistPage() {
     <div>
       <StepIndicator current={1} total={3} />
       <div style={{ padding: '0.5rem 1rem 0' }}>
+        {state?.menu && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              marginBottom: '0.75rem',
+              padding: '0.625rem 0.875rem',
+              background: 'var(--salon-accent-light)',
+              borderRadius: '0.75rem',
+            }}
+          >
+            <span style={{ fontSize: '0.75rem', color: 'var(--salon-accent)', fontWeight: 600 }}>
+              メニュー：{state.menu.name}
+            </span>
+            <button
+              onClick={() => router.push('/book/menu')}
+              style={{
+                marginLeft: 'auto',
+                fontSize: '0.7rem',
+                color: 'var(--salon-muted)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+              }}
+            >
+              変更
+            </button>
+          </div>
+        )}
         <h1 className="section-title animate-fadeInUp">スタイリストを選ぶ</h1>
         <p style={{ fontSize: '0.875rem', color: 'var(--salon-muted)', marginTop: '0.25rem' }}>
           担当してほしいスタイリストを選んでください
