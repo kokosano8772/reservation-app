@@ -2,7 +2,7 @@
 // src/app/book/stylist/page.tsx
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getBookingState, setStylist } from '@/lib/bookingStore'
+import { getBookingState, setBookingState } from '@/lib/bookingStore'
 import { RANK_LABELS } from '@/lib/utils'
 import { LoadingSpinner, ErrorMessage, StepIndicator } from '@/components/ui/Header'
 import type { Stylist } from '@/types'
@@ -29,7 +29,7 @@ export default function StylistPage() {
 
   function handleSelect(stylist: Stylist) {
     setSelected(stylist.id)
-    setStylist(stylist)
+    setBookingState({ stylist, date: null, time: null })
     setTimeout(() => router.push('/book/datetime'), 150)
   }
 
@@ -161,16 +161,20 @@ export default function StylistPage() {
         {!loading && stylists.length > 0 && (
           <button
             onClick={() => {
-              setStylist({
-                id: 'any',
-                name: 'おまかせ',
-                name_kana: '',
-                bio: 'スタッフにお任せください',
-                photo_url: '',
-                specialties: [],
-                rank: 'stylist',
-                is_active: true,
-                created_at: '',
+              setBookingState({
+                stylist: {
+                  id: 'any',
+                  name: 'おまかせ',
+                  name_kana: '',
+                  bio: 'スタッフにお任せください',
+                  photo_url: '',
+                  specialties: [],
+                  rank: 'stylist',
+                  is_active: true,
+                  created_at: '',
+                },
+                date: null,
+                time: null,
               })
               router.push('/book/datetime')
             }}
