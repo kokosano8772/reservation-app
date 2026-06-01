@@ -8,6 +8,76 @@ import { formatDateFull, formatTime } from '@/lib/utils'
 import { LoadingSpinner } from '@/components/ui/Header'
 import { Suspense } from 'react'
 
+type ConfettiParticle = {
+  color: string
+  left: number
+  delay: number
+  duration: number
+  width: number
+  height: number
+  borderRadius: string
+}
+
+function Confetti() {
+  const [particles, setParticles] = useState<ConfettiParticle[]>([])
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const colors = ['var(--salon-accent)', '#ffffff', '#1a1a1a']
+    setParticles(
+      Array.from({ length: 55 }, (_, i) => ({
+        color: colors[i % 3],
+        left: Math.random() * 100,
+        delay: Math.random() * 0.8,
+        duration: 1.4 + Math.random() * 0.8,
+        width: 6 + Math.random() * 6,
+        height: 3 + Math.random() * 5,
+        borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+      }))
+    )
+    const t = setTimeout(() => setVisible(false), 2000)
+    return () => clearTimeout(t)
+  }, [])
+
+  if (!visible || particles.length === 0) return null
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden',
+        zIndex: 9999,
+      }}
+    >
+      <style>{`
+        @keyframes confettiFall {
+          0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+          85%  { opacity: 1; }
+          100% { transform: translateY(110vh) rotate(600deg); opacity: 0; }
+        }
+      `}</style>
+      {particles.map((p, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            top: '-12px',
+            left: `${p.left}%`,
+            width: p.width,
+            height: p.height,
+            background: p.color,
+            borderRadius: p.borderRadius,
+            willChange: 'transform, opacity',
+            animation: `confettiFall ${p.duration}s ${p.delay}s ease-in forwards`,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 type ReservationDetail = {
   id: string
   reservation_date: string
@@ -74,6 +144,7 @@ function CompleteContent() {
 
   return (
     <div style={{ maxWidth: 480, margin: '0 auto', minHeight: '100dvh' }}>
+      <Confetti />
       {/* Header */}
       <div
         style={{
