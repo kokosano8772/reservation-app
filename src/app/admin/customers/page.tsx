@@ -83,70 +83,99 @@ export default function AdminCustomersPage() {
               顧客が見つかりません
             </div>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead style={{ background: '#f9fafb' }}>
-                  <tr>
-                    <th>顧客名</th>
-                    <th>連絡先</th>
-                    <th>来店回数</th>
-                    <th>最終来店</th>
-                    <th>登録日</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {customers.map((c) => (
-                    <tr
-                      key={c.id}
-                      style={{
-                        background: selected?.id === c.id ? 'var(--salon-accent-light)' : 'white',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => showCustomerDetail(c)}
-                    >
-                      <td data-label="顧客名">
-                        <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{c.name}</div>
-                        {c.name_kana && (
-                          <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>{c.name_kana}</div>
-                        )}
-                      </td>
-                      <td data-label="連絡先" style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
-                        {c.phone && <div>{c.phone}</div>}
-                        {c.email && <div>{c.email}</div>}
-                      </td>
-                      <td data-label="来店" style={{ textAlign: 'left' }}>
-                        <span
-                          style={{
-                            fontWeight: 700,
-                            color: c.visit_count >= 3 ? 'var(--salon-accent)' : 'var(--salon-primary)',
-                            fontSize: '0.875rem',
-                          }}
-                        >
-                          {c.visit_count}回
-                        </span>
+            <>
+              {/* ── モバイルカード ── */}
+              <div className="admin-mobile-only">
+                {customers.map((c) => (
+                  <div
+                    key={c.id}
+                    onClick={() => showCustomerDetail(c)}
+                    style={{
+                      padding: '1rem',
+                      borderBottom: '1px solid var(--salon-border)',
+                      background: selected?.id === c.id ? 'var(--salon-accent-light)' : 'white',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                    }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.2rem' }}>
+                        {c.name}
                         {c.visit_count >= 3 && (
-                          <div style={{ fontSize: '0.65rem', color: 'var(--salon-accent)', fontWeight: 600 }}>
-                            ★ 常連
-                          </div>
+                          <span style={{ fontSize: '0.68rem', color: 'var(--salon-accent)', fontWeight: 600, marginLeft: '0.5rem' }}>★ 常連</span>
                         )}
-                      </td>
-                      <td data-label="最終来店" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
-                        {c.last_visit_at
-                          ? format(new Date(c.last_visit_at), 'M月d日', { locale: ja })
-                          : '—'}
-                      </td>
-                      <td data-label="登録日" style={{ fontSize: '0.78rem', color: 'var(--salon-muted)', whiteSpace: 'nowrap' }}>
-                        {format(new Date(c.created_at), 'yyyy/M/d', { locale: ja })}
-                      </td>
-                      <td>
-                        <span style={{ color: 'var(--salon-accent)', fontSize: '1.1rem' }}>›</span>
-                      </td>
+                      </div>
+                      {c.name_kana && (
+                        <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)', marginBottom: '0.15rem' }}>{c.name_kana}</div>
+                      )}
+                      <div style={{ fontSize: '0.8rem', color: 'var(--salon-muted)', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                        {c.phone && <span>{c.phone}</span>}
+                        {c.email && <span>{c.email}</span>}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: '1rem', color: c.visit_count >= 3 ? 'var(--salon-accent)' : 'var(--salon-primary)' }}>
+                        {c.visit_count}回
+                      </div>
+                      {c.last_visit_at && (
+                        <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)', marginTop: '0.1rem' }}>
+                          {format(new Date(c.last_visit_at), 'M/d来店', { locale: ja })}
+                        </div>
+                      )}
+                    </div>
+                    <span style={{ color: 'var(--salon-muted)', fontSize: '1.1rem', flexShrink: 0 }}>›</span>
+                  </div>
+                ))}
+              </div>
+              {/* ── デスクトップテーブル ── */}
+              <div className="admin-desktop-only" style={{ overflowX: 'auto' }}>
+                <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead style={{ background: '#f9fafb' }}>
+                    <tr>
+                      <th>顧客名</th>
+                      <th>連絡先</th>
+                      <th>来店回数</th>
+                      <th>最終来店</th>
+                      <th>登録日</th>
+                      <th></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {customers.map((c) => (
+                      <tr
+                        key={c.id}
+                        style={{ background: selected?.id === c.id ? 'var(--salon-accent-light)' : 'white', cursor: 'pointer' }}
+                        onClick={() => showCustomerDetail(c)}
+                      >
+                        <td>
+                          <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{c.name}</div>
+                          {c.name_kana && <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>{c.name_kana}</div>}
+                        </td>
+                        <td style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
+                          {c.phone && <div>{c.phone}</div>}
+                          {c.email && <div>{c.email}</div>}
+                        </td>
+                        <td style={{ textAlign: 'center' }}>
+                          <span style={{ fontWeight: 700, color: c.visit_count >= 3 ? 'var(--salon-accent)' : 'var(--salon-primary)', fontSize: '0.875rem' }}>
+                            {c.visit_count}回
+                          </span>
+                          {c.visit_count >= 3 && <div style={{ fontSize: '0.65rem', color: 'var(--salon-accent)', fontWeight: 600 }}>★ 常連</div>}
+                        </td>
+                        <td style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                          {c.last_visit_at ? format(new Date(c.last_visit_at), 'M月d日', { locale: ja }) : '—'}
+                        </td>
+                        <td style={{ fontSize: '0.78rem', color: 'var(--salon-muted)', whiteSpace: 'nowrap' }}>
+                          {format(new Date(c.created_at), 'yyyy/M/d', { locale: ja })}
+                        </td>
+                        <td><span style={{ color: 'var(--salon-accent)', fontSize: '1.1rem' }}>›</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
 

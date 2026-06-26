@@ -232,96 +232,18 @@ body {
   transition: opacity 0.15s, transform 0.15s ease;
 }
 
-/* ── Admin mobile responsive ──────────────────── */
+/* ── Admin mobile / desktop visibility ───────── */
+.admin-mobile-only {
+  display: none;
+}
+
 @media (max-width: 767px) {
-  /* Table → card list */
-  .admin-table,
-  .admin-table tbody {
+  .admin-mobile-only {
     display: block;
   }
-  .admin-table thead {
+  .admin-desktop-only {
     display: none;
   }
-  .admin-table tr {
-    display: block;
-    position: relative;
-    padding: 1.125rem 1rem 1rem;
-    border-bottom: 1px solid var(--salon-border);
-  }
-  .admin-table tbody tr:last-child {
-    border-bottom: none;
-  }
-  .admin-table tbody tr:hover {
-    background: transparent;
-  }
-  .admin-table td {
-    display: block;
-    padding: 0;
-    border: none;
-    line-height: 1.55;
-  }
-  /* ラベルプレフィックスは非表示 */
-  .admin-table td[data-label]::before {
-    content: none;
-  }
-  /* 時間: 大きくトップに */
-  .admin-table td[data-label="時間"] {
-    font-size: 1.05rem !important;
-    font-weight: 700 !important;
-    white-space: normal !important;
-    margin-bottom: 0.3rem;
-    padding-right: 5.5rem;
-  }
-  /* ステータスバッジ: 右上に絶対配置 */
-  .admin-table td[data-label="状態"] {
-    position: absolute;
-    top: 1.125rem;
-    right: 1rem;
-  }
-  /* 顧客名 */
-  .admin-table td[data-label="顧客名"] {
-    margin-bottom: 0.2rem;
-  }
-  /* サブ情報: 小さく・グレー */
-  .admin-table td[data-label="担当"],
-  .admin-table td[data-label="メニュー"],
-  .admin-table td[data-label="連絡先"] {
-    font-size: 0.8rem !important;
-    color: var(--salon-muted) !important;
-  }
-  /* 来店回数 */
-  .admin-table td[data-label="来店"] {
-    font-size: 0.8rem !important;
-    text-align: left !important;
-    color: var(--salon-muted);
-  }
-  /* 顧客ページ: 最終来店を小さく */
-  .admin-table td[data-label="最終来店"] {
-    font-size: 0.8rem !important;
-    color: var(--salon-muted);
-  }
-  /* 登録日はモバイルでは不要 */
-  .admin-table td[data-label="登録日"] {
-    display: none;
-  }
-  /* 操作ボタン列 */
-  .admin-table td:not([data-label]) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.875rem;
-  }
-  .admin-table td:not([data-label]):empty {
-    display: none;
-    margin-top: 0;
-  }
-  /* ボタンをタップしやすいサイズに */
-  .admin-table td:not([data-label]) button {
-    padding: 7px 14px !important;
-    font-size: 0.8rem !important;
-    min-height: 36px;
-  }
-  /* Customer & schedule 2-col grids → 1 col */
   .admin-customer-grid,
   .admin-schedule-grid {
     grid-template-columns: 1fr !important;

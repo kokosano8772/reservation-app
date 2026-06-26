@@ -195,7 +195,79 @@ export default function AdminReservationsPage() {
         </div>
       ) : (
         <div className="card" style={{ overflow: 'hidden' }}>
-          <div style={{ overflowX: 'auto' }}>
+          {/* ── モバイルカード ── */}
+          <div className="admin-mobile-only">
+            {reservations
+              .sort((a, b) => a.start_time.localeCompare(b.start_time))
+              .map((r) => {
+                const stylist = r.stylist as any
+                const menu = r.menu as any
+                const customer = r.customer as any
+                const isCancelled = r.status === 'cancelled'
+                return (
+                  <div
+                    key={r.id}
+                    style={{
+                      padding: '1rem',
+                      borderBottom: '1px solid var(--salon-border)',
+                      background: isCancelled ? '#fafafa' : 'white',
+                      opacity: isCancelled ? 0.7 : 1,
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <span style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.01em' }}>
+                        {formatTime(r.start_time)}〜{formatTime(r.end_time)}
+                      </span>
+                      <span className="tag" style={{ background: `${STATUS_COLOR[r.status]}18`, color: STATUS_COLOR[r.status], fontSize: '0.72rem' }}>
+                        {STATUS_LABEL[r.status] ?? r.status}
+                      </span>
+                    </div>
+                    <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.2rem' }}>
+                      {customer?.name ?? '—'}
+                      {customer?.visit_count > 1 && (
+                        <span style={{ fontSize: '0.7rem', color: 'var(--salon-accent)', fontWeight: 600, marginLeft: '0.5rem' }}>★ リピーター</span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--salon-muted)', display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                      {(customer?.phone || customer?.email) && (
+                        <span>{customer?.phone}{customer?.phone && customer?.email ? ' · ' : ''}{customer?.email}</span>
+                      )}
+                      <span>
+                        {stylist?.name ?? '—'} / {menu?.name ?? '—'}
+                        {menu?.price ? ` ¥${menu.price.toLocaleString()}〜` : ''}
+                      </span>
+                      {(customer?.visit_count ?? 0) > 0 && <span>来店 {customer.visit_count}回</span>}
+                    </div>
+                    {r.status === 'confirmed' && (
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                        <button onClick={() => updateStatus(r.id, 'completed')}
+                          style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #86efac', background: '#f0fdf4', color: '#15803d', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                          来店済
+                        </button>
+                        <button onClick={() => updateStatus(r.id, 'no_show')}
+                          style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #fed7aa', background: '#fff7ed', color: '#c2410c', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                          無断欠席
+                        </button>
+                        <button onClick={() => updateStatus(r.id, 'cancelled')}
+                          style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #fecaca', background: '#fef2f2', color: '#b91c1c', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                          キャンセル
+                        </button>
+                      </div>
+                    )}
+                    {r.status !== 'confirmed' && (
+                      <div style={{ marginTop: '0.75rem' }}>
+                        <button onClick={() => updateStatus(r.id, 'confirmed')}
+                          style={{ width: '100%', padding: '9px 0', borderRadius: '8px', border: '1.5px solid var(--salon-border)', background: 'white', color: 'var(--salon-muted)', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                          予約済に戻す
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+          </div>
+          {/* ── デスクトップテーブル ── */}
+          <div className="admin-desktop-only" style={{ overflowX: 'auto' }}>
             <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead style={{ background: '#f9fafb' }}>
                 <tr>
@@ -218,85 +290,40 @@ export default function AdminReservationsPage() {
                     const customer = r.customer as any
                     const isCancelled = r.status === 'cancelled'
                     return (
-                      <tr
-                        key={r.id}
-                        style={{
-                          background: isCancelled ? '#fafafa' : 'white',
-                          opacity: isCancelled ? 0.65 : 1,
-                        }}
-                      >
-                        <td data-label="時間" style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.875rem' }}>
+                      <tr key={r.id} style={{ background: isCancelled ? '#fafafa' : 'white', opacity: isCancelled ? 0.65 : 1 }}>
+                        <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.875rem' }}>
                           {formatTime(r.start_time)}<br />
-                          <span style={{ fontWeight: 400, color: 'var(--salon-muted)', fontSize: '0.75rem' }}>
-                            〜{formatTime(r.end_time)}
-                          </span>
+                          <span style={{ fontWeight: 400, color: 'var(--salon-muted)', fontSize: '0.75rem' }}>〜{formatTime(r.end_time)}</span>
                         </td>
-                        <td data-label="顧客名">
+                        <td>
                           <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{customer?.name ?? '—'}</div>
-                          {customer?.visit_count > 1 && (
-                            <div style={{ fontSize: '0.68rem', color: 'var(--salon-accent)', fontWeight: 600 }}>
-                              ★ リピーター
-                            </div>
-                          )}
+                          {customer?.visit_count > 1 && <div style={{ fontSize: '0.68rem', color: 'var(--salon-accent)', fontWeight: 600 }}>★ リピーター</div>}
                         </td>
-                        <td data-label="連絡先" style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
+                        <td style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
                           {customer?.phone && <div>{customer.phone}</div>}
                           {customer?.email && <div style={{ fontSize: '0.72rem' }}>{customer.email}</div>}
                         </td>
-                        <td data-label="担当" style={{ fontSize: '0.875rem' }}>{stylist?.name ?? '—'}</td>
-                        <td data-label="メニュー" style={{ fontSize: '0.825rem' }}>
+                        <td style={{ fontSize: '0.875rem' }}>{stylist?.name ?? '—'}</td>
+                        <td style={{ fontSize: '0.825rem' }}>
                           {menu?.name ?? '—'}
-                          {menu?.price && (
-                            <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>
-                              ¥{menu.price.toLocaleString()}〜
-                            </div>
-                          )}
+                          {menu?.price && <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>¥{menu.price.toLocaleString()}〜</div>}
                         </td>
-                        <td data-label="来店" style={{ textAlign: 'left', fontSize: '0.875rem' }}>
-                          {customer?.visit_count ?? 0}回
-                        </td>
-                        <td data-label="状態">
-                          <span
-                            className="tag"
-                            style={{
-                              background: `${STATUS_COLOR[r.status]}18`,
-                              color: STATUS_COLOR[r.status],
-                              fontSize: '0.7rem',
-                            }}
-                          >
+                        <td style={{ textAlign: 'center', fontSize: '0.875rem' }}>{customer?.visit_count ?? 0}回</td>
+                        <td>
+                          <span className="tag" style={{ background: `${STATUS_COLOR[r.status]}18`, color: STATUS_COLOR[r.status], fontSize: '0.7rem' }}>
                             {STATUS_LABEL[r.status] ?? r.status}
                           </span>
                         </td>
                         <td>
                           {r.status === 'confirmed' && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', minWidth: 80 }}>
-                              <button
-                                onClick={() => updateStatus(r.id, 'completed')}
-                                style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #86efac', background: '#f0fdf4', color: '#15803d', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}
-                              >
-                                来店済
-                              </button>
-                              <button
-                                onClick={() => updateStatus(r.id, 'no_show')}
-                                style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #fed7aa', background: '#fff7ed', color: '#c2410c', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}
-                              >
-                                無断欠席
-                              </button>
-                              <button
-                                onClick={() => updateStatus(r.id, 'cancelled')}
-                                style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #fecaca', background: '#fef2f2', color: '#b91c1c', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}
-                              >
-                                キャンセル
-                              </button>
+                              <button onClick={() => updateStatus(r.id, 'completed')} style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #86efac', background: '#f0fdf4', color: '#15803d', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}>来店済</button>
+                              <button onClick={() => updateStatus(r.id, 'no_show')} style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #fed7aa', background: '#fff7ed', color: '#c2410c', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}>無断欠席</button>
+                              <button onClick={() => updateStatus(r.id, 'cancelled')} style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid #fecaca', background: '#fef2f2', color: '#b91c1c', fontSize: '0.7rem', fontWeight: 600, cursor: 'pointer' }}>キャンセル</button>
                             </div>
                           )}
                           {r.status !== 'confirmed' && (
-                            <button
-                              onClick={() => updateStatus(r.id, 'confirmed')}
-                              style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid var(--salon-border)', background: 'white', color: 'var(--salon-muted)', fontSize: '0.7rem', cursor: 'pointer' }}
-                            >
-                              復元
-                            </button>
+                            <button onClick={() => updateStatus(r.id, 'confirmed')} style={{ padding: '3px 8px', borderRadius: '5px', border: '1px solid var(--salon-border)', background: 'white', color: 'var(--salon-muted)', fontSize: '0.7rem', cursor: 'pointer' }}>復元</button>
                           )}
                         </td>
                       </tr>

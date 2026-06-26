@@ -157,107 +157,115 @@ export default function AdminDashboard() {
             本日の予約はありません
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th>時間</th>
-                  <th>顧客名</th>
-                  <th>担当</th>
-                  <th>メニュー</th>
-                  <th>ステータス</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {todayReservations
-                  .sort((a, b) => a.start_time.localeCompare(b.start_time))
-                  .map((r) => {
-                    const stylist = r.stylist as any
-                    const menu = r.menu as any
-                    const customer = r.customer as any
-                    return (
-                      <tr key={r.id} style={{ background: r.status === 'cancelled' ? '#fafafa' : 'white' }}>
-                        <td data-label="時間" style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>
+          <>
+            {/* ── モバイルカード ── */}
+            <div className="admin-mobile-only">
+              {todayReservations
+                .sort((a, b) => a.start_time.localeCompare(b.start_time))
+                .map((r) => {
+                  const stylist = r.stylist as any
+                  const menu = r.menu as any
+                  const customer = r.customer as any
+                  return (
+                    <div
+                      key={r.id}
+                      style={{
+                        padding: '1rem',
+                        borderBottom: '1px solid var(--salon-border)',
+                        background: r.status === 'cancelled' ? '#fafafa' : 'white',
+                        opacity: r.status === 'cancelled' ? 0.7 : 1,
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.01em' }}>
                           {formatTime(r.start_time)}〜{formatTime(r.end_time)}
-                        </td>
-                        <td data-label="顧客名">
-                          <div style={{ fontWeight: 600 }}>{customer?.name ?? '—'}</div>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>
-                            {customer?.phone ?? ''}
-                          </div>
-                        </td>
-                        <td data-label="担当">{stylist?.name ?? '—'}</td>
-                        <td data-label="メニュー" style={{ fontSize: '0.825rem' }}>{menu?.name ?? '—'}</td>
-                        <td data-label="状態">
-                          <span
-                            className="tag"
-                            style={{
-                              background: `${STATUS_COLOR[r.status]}18`,
-                              color: STATUS_COLOR[r.status],
-                              fontSize: '0.7rem',
-                            }}
-                          >
-                            {STATUS_LABEL[r.status] ?? r.status}
-                          </span>
-                        </td>
-                        <td>
-                          {r.status === 'confirmed' && (
-                            <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
-                              <button
-                                onClick={() => updateStatus(r.id, 'completed')}
-                                style={{
-                                  padding: '3px 10px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #86efac',
-                                  background: '#f0fdf4',
-                                  color: '#15803d',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                来店済
-                              </button>
-                              <button
-                                onClick={() => updateStatus(r.id, 'cancelled')}
-                                style={{
-                                  padding: '3px 10px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #fecaca',
-                                  background: '#fef2f2',
-                                  color: '#b91c1c',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                キャンセル
-                              </button>
-                              <button
-                                onClick={() => updateStatus(r.id, 'no_show')}
-                                style={{
-                                  padding: '3px 10px',
-                                  borderRadius: '6px',
-                                  border: '1px solid #fed7aa',
-                                  background: '#fff7ed',
-                                  color: '#c2410c',
-                                  fontSize: '0.72rem',
-                                  fontWeight: 600,
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                無断欠席
-                              </button>
-                            </div>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  })}
-              </tbody>
-            </table>
-          </div>
+                        </span>
+                        <span
+                          className="tag"
+                          style={{ background: `${STATUS_COLOR[r.status]}18`, color: STATUS_COLOR[r.status], fontSize: '0.72rem' }}
+                        >
+                          {STATUS_LABEL[r.status] ?? r.status}
+                        </span>
+                      </div>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.25rem' }}>
+                        {customer?.name ?? '—'}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--salon-muted)', display: 'flex', flexDirection: 'column', gap: '0.1rem', marginBottom: '0.125rem' }}>
+                        {customer?.phone && <span>{customer.phone}</span>}
+                        <span>{stylist?.name ?? '—'} / {menu?.name ?? '—'}</span>
+                      </div>
+                      {r.status === 'confirmed' && (
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+                          <button onClick={() => updateStatus(r.id, 'completed')}
+                            style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #86efac', background: '#f0fdf4', color: '#15803d', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                            来店済
+                          </button>
+                          <button onClick={() => updateStatus(r.id, 'cancelled')}
+                            style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #fecaca', background: '#fef2f2', color: '#b91c1c', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                            キャンセル
+                          </button>
+                          <button onClick={() => updateStatus(r.id, 'no_show')}
+                            style={{ flex: 1, padding: '10px 0', borderRadius: '8px', border: '1.5px solid #fed7aa', background: '#fff7ed', color: '#c2410c', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
+                            無断欠席
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
+            {/* ── デスクトップテーブル ── */}
+            <div className="admin-desktop-only" style={{ overflowX: 'auto' }}>
+              <table className="admin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th>時間</th>
+                    <th>顧客名</th>
+                    <th>担当</th>
+                    <th>メニュー</th>
+                    <th>ステータス</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {todayReservations
+                    .sort((a, b) => a.start_time.localeCompare(b.start_time))
+                    .map((r) => {
+                      const stylist = r.stylist as any
+                      const menu = r.menu as any
+                      const customer = r.customer as any
+                      return (
+                        <tr key={r.id} style={{ background: r.status === 'cancelled' ? '#fafafa' : 'white' }}>
+                          <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>
+                            {formatTime(r.start_time)}〜{formatTime(r.end_time)}
+                          </td>
+                          <td>
+                            <div style={{ fontWeight: 600 }}>{customer?.name ?? '—'}</div>
+                            <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>{customer?.phone ?? ''}</div>
+                          </td>
+                          <td>{stylist?.name ?? '—'}</td>
+                          <td style={{ fontSize: '0.825rem' }}>{menu?.name ?? '—'}</td>
+                          <td>
+                            <span className="tag" style={{ background: `${STATUS_COLOR[r.status]}18`, color: STATUS_COLOR[r.status], fontSize: '0.7rem' }}>
+                              {STATUS_LABEL[r.status] ?? r.status}
+                            </span>
+                          </td>
+                          <td>
+                            {r.status === 'confirmed' && (
+                              <div style={{ display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
+                                <button onClick={() => updateStatus(r.id, 'completed')} style={{ padding: '3px 10px', borderRadius: '6px', border: '1px solid #86efac', background: '#f0fdf4', color: '#15803d', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>来店済</button>
+                                <button onClick={() => updateStatus(r.id, 'cancelled')} style={{ padding: '3px 10px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', color: '#b91c1c', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>キャンセル</button>
+                                <button onClick={() => updateStatus(r.id, 'no_show')} style={{ padding: '3px 10px', borderRadius: '6px', border: '1px solid #fed7aa', background: '#fff7ed', color: '#c2410c', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>無断欠席</button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>
