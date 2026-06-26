@@ -131,7 +131,7 @@ export default function AdminSchedulePage() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selectedDay ? '1fr 280px' : '1fr', gap: '1rem' }}>
+      <div className="admin-schedule-grid" style={{ display: 'grid', gridTemplateColumns: selectedDay ? '1fr 280px' : '1fr', gap: '1rem' }}>
         {/* Calendar */}
         <div className="card" style={{ padding: '1.25rem' }}>
           {/* Month nav */}

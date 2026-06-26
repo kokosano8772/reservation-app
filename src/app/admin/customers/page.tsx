@@ -73,7 +73,7 @@ export default function AdminCustomersPage() {
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 340px' : '1fr', gap: '1rem' }}>
+      <div className="admin-customer-grid" style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 340px' : '1fr', gap: '1rem' }}>
         {/* Customer list */}
         <div className="card" style={{ overflow: 'hidden' }}>
           {loading ? (
@@ -105,17 +105,17 @@ export default function AdminCustomersPage() {
                       }}
                       onClick={() => showCustomerDetail(c)}
                     >
-                      <td>
+                      <td data-label="顧客名">
                         <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{c.name}</div>
                         {c.name_kana && (
                           <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>{c.name_kana}</div>
                         )}
                       </td>
-                      <td style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
+                      <td data-label="連絡先" style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
                         {c.phone && <div>{c.phone}</div>}
                         {c.email && <div>{c.email}</div>}
                       </td>
-                      <td style={{ textAlign: 'center' }}>
+                      <td data-label="来店" style={{ textAlign: 'left' }}>
                         <span
                           style={{
                             fontWeight: 700,
@@ -131,12 +131,12 @@ export default function AdminCustomersPage() {
                           </div>
                         )}
                       </td>
-                      <td style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                      <td data-label="最終来店" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
                         {c.last_visit_at
                           ? format(new Date(c.last_visit_at), 'M月d日', { locale: ja })
                           : '—'}
                       </td>
-                      <td style={{ fontSize: '0.78rem', color: 'var(--salon-muted)', whiteSpace: 'nowrap' }}>
+                      <td data-label="登録日" style={{ fontSize: '0.78rem', color: 'var(--salon-muted)', whiteSpace: 'nowrap' }}>
                         {format(new Date(c.created_at), 'yyyy/M/d', { locale: ja })}
                       </td>
                       <td>

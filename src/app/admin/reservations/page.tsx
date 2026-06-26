@@ -225,13 +225,13 @@ export default function AdminReservationsPage() {
                           opacity: isCancelled ? 0.65 : 1,
                         }}
                       >
-                        <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.875rem' }}>
+                        <td data-label="時間" style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.875rem' }}>
                           {formatTime(r.start_time)}<br />
                           <span style={{ fontWeight: 400, color: 'var(--salon-muted)', fontSize: '0.75rem' }}>
                             〜{formatTime(r.end_time)}
                           </span>
                         </td>
-                        <td>
+                        <td data-label="顧客名">
                           <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{customer?.name ?? '—'}</div>
                           {customer?.visit_count > 1 && (
                             <div style={{ fontSize: '0.68rem', color: 'var(--salon-accent)', fontWeight: 600 }}>
@@ -239,12 +239,12 @@ export default function AdminReservationsPage() {
                             </div>
                           )}
                         </td>
-                        <td style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
+                        <td data-label="連絡先" style={{ fontSize: '0.8rem', color: 'var(--salon-muted)' }}>
                           {customer?.phone && <div>{customer.phone}</div>}
                           {customer?.email && <div style={{ fontSize: '0.72rem' }}>{customer.email}</div>}
                         </td>
-                        <td style={{ fontSize: '0.875rem' }}>{stylist?.name ?? '—'}</td>
-                        <td style={{ fontSize: '0.825rem' }}>
+                        <td data-label="担当" style={{ fontSize: '0.875rem' }}>{stylist?.name ?? '—'}</td>
+                        <td data-label="メニュー" style={{ fontSize: '0.825rem' }}>
                           {menu?.name ?? '—'}
                           {menu?.price && (
                             <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>
@@ -252,10 +252,10 @@ export default function AdminReservationsPage() {
                             </div>
                           )}
                         </td>
-                        <td style={{ textAlign: 'center', fontSize: '0.875rem' }}>
+                        <td data-label="来店" style={{ textAlign: 'left', fontSize: '0.875rem' }}>
                           {customer?.visit_count ?? 0}回
                         </td>
-                        <td>
+                        <td data-label="状態">
                           <span
                             className="tag"
                             style={{

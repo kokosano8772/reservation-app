@@ -178,18 +178,18 @@ export default function AdminDashboard() {
                     const customer = r.customer as any
                     return (
                       <tr key={r.id} style={{ background: r.status === 'cancelled' ? '#fafafa' : 'white' }}>
-                        <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>
+                        <td data-label="時間" style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>
                           {formatTime(r.start_time)}〜{formatTime(r.end_time)}
                         </td>
-                        <td>
+                        <td data-label="顧客名">
                           <div style={{ fontWeight: 600 }}>{customer?.name ?? '—'}</div>
                           <div style={{ fontSize: '0.72rem', color: 'var(--salon-muted)' }}>
                             {customer?.phone ?? ''}
                           </div>
                         </td>
-                        <td>{stylist?.name ?? '—'}</td>
-                        <td style={{ fontSize: '0.825rem' }}>{menu?.name ?? '—'}</td>
-                        <td>
+                        <td data-label="担当">{stylist?.name ?? '—'}</td>
+                        <td data-label="メニュー" style={{ fontSize: '0.825rem' }}>{menu?.name ?? '—'}</td>
+                        <td data-label="状態">
                           <span
                             className="tag"
                             style={{
