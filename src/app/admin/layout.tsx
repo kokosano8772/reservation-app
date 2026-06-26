@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <span style={{ fontSize: '1.1rem', fontWeight: 800, letterSpacing: '0.06em' }}>
-            BLOOM HAIR
+            KOKO DESIGN
           </span>
           <span
             style={{
