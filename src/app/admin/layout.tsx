@@ -64,7 +64,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             borderRight: '1px solid var(--salon-border)',
             padding: '1rem 0',
             flexShrink: 0,
-            display: 'none',
           }}
           className="admin-sidebar"
         >
@@ -98,10 +97,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Bottom nav (mobile) */}
       <nav
+        className="admin-bottom-nav"
         style={{
           background: 'white',
           borderTop: '1px solid var(--salon-border)',
-          display: 'flex',
           position: 'sticky',
           bottom: 0,
           zIndex: 50,

@@ -158,3 +158,76 @@ body {
 .delay-3 { animation-delay: 0.24s; }
 .delay-4 { animation-delay: 0.32s; }
 .delay-5 { animation-delay: 0.40s; }
+
+/* ── Admin layout ─────────────────────────────── */
+.admin-sidebar {
+  display: none;
+}
+
+.admin-bottom-nav {
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+  .admin-bottom-nav {
+    display: none;
+  }
+}
+
+/* ── Admin table ──────────────────────────────── */
+.admin-table {
+  border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--salon-border);
+}
+
+.admin-table th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--salon-muted);
+  white-space: nowrap;
+  background: #f9fafb;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* ── Status badge ─────────────────────────────── */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Outline button ───────────────────────────── */
+.btn-outline {
+  display: block;
+  width: 100%;
+  background: white;
+  color: var(--salon-primary);
+  border: 1.5px solid var(--salon-border);
+  border-radius: 9999px;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s ease;
+}
