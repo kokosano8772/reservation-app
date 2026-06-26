@@ -181,8 +181,11 @@ export default function AdminCustomersPage() {
 
         {/* Customer detail panel */}
         {selected && (
-          <div className="card" style={{ padding: '1.25rem', height: 'fit-content' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+          <>
+            <div className="admin-mobile-backdrop" onClick={() => setSelected(null)} />
+            <div className="card admin-customer-detail" style={{ padding: '1.25rem', height: 'fit-content' }}>
+              <div className="admin-mobile-only" style={{ width: 36, height: 4, borderRadius: 2, background: '#ddd', margin: '0 auto 1rem' }} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <p style={{ fontWeight: 700, fontSize: '1rem' }}>{selected.name}</p>
               <button
                 onClick={() => setSelected(null)}
@@ -267,6 +270,7 @@ export default function AdminCustomersPage() {
               )}
             </div>
           </div>
+          </>
         )}
       </div>
     </div>

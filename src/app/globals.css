@@ -237,6 +237,15 @@ body {
   display: none;
 }
 
+.admin-mobile-backdrop {
+  display: none;
+}
+
+@keyframes adminSlideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
 @media (max-width: 767px) {
   .admin-mobile-only {
     display: block;
@@ -247,5 +256,29 @@ body {
   .admin-customer-grid,
   .admin-schedule-grid {
     grid-template-columns: 1fr !important;
+  }
+  /* 顧客詳細: ボトムシート */
+  .admin-mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+  }
+  .admin-customer-detail {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 82vh;
+    overflow-y: auto;
+    z-index: 200;
+    border-radius: 1.25rem 1.25rem 0 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+    box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.16);
+    animation: adminSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    padding-bottom: 2rem !important;
   }
 }
