@@ -45,24 +45,75 @@ export async function POST(req: NextRequest) {
     notes,
   } = body
 
-  if (!stylistId || !menuId || !date || !time || !duration || !customerName) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+  if (!menuId || !date || !time || !duration || !customerName) {
+    return NextResponse.json({ error: '必須項目が入力されていません' }, { status: 400 })
   }
 
   const supabase = await createAdminClient()
   const endTime = calcEndTime(time, duration)
 
-  // Conflict check (double booking prevention)
-  const { data: conflicts } = await supabase
-    .from('reservations')
-    .select('id')
-    .eq('stylist_id', stylistId)
-    .eq('reservation_date', date)
-    .neq('status', 'cancelled')
-    .or(`start_time.lt.${endTime}:00,end_time.gt.${time}:00`)
+  // Resolve the stylist to book. `stylistId` is null when the customer chose
+  // 「おまかせ（指名なし）」— in that case, auto-assign any active stylist who
+  // is working and free for the requested slot.
+  let resolvedStylistId: string | null = null
 
-  if (conflicts && conflicts.length > 0) {
-    return NextResponse.json({ error: 'この時間枠はすでに予約済みです。別の時間をお選びください。' }, { status: 409 })
+  if (stylistId) {
+    const { data: conflicts } = await supabase
+      .from('reservations')
+      .select('id')
+      .eq('stylist_id', stylistId)
+      .eq('reservation_date', date)
+      .neq('status', 'cancelled')
+      .or(`start_time.lt.${endTime}:00,end_time.gt.${time}:00`)
+
+    if (conflicts && conflicts.length > 0) {
+      return NextResponse.json({ error: 'この時間枠はすでに予約済みです。別の時間をお選びください。' }, { status: 409 })
+    }
+    resolvedStylistId = stylistId
+  } else {
+    const { data: activeStylists } = await supabase
+      .from('stylists')
+      .select('id')
+      .eq('is_active', true)
+      .order('created_at')
+
+    for (const candidate of activeStylists ?? []) {
+      const { data: schedule } = await supabase
+        .from('stylist_schedules')
+        .select('*')
+        .eq('stylist_id', candidate.id)
+        .eq('date', date)
+        .single()
+
+      if (schedule?.is_holiday) continue
+
+      const workStart = (schedule?.work_start ?? '10:00:00').slice(0, 5)
+      const workEnd = (schedule?.work_end ?? '19:00:00').slice(0, 5)
+      if (time < workStart || endTime > workEnd) continue
+
+      if (schedule?.break_start && schedule?.break_end) {
+        const breakStart = schedule.break_start.slice(0, 5)
+        const breakEnd = schedule.break_end.slice(0, 5)
+        if (time < breakEnd && endTime > breakStart) continue
+      }
+
+      const { data: conflicts } = await supabase
+        .from('reservations')
+        .select('id')
+        .eq('stylist_id', candidate.id)
+        .eq('reservation_date', date)
+        .neq('status', 'cancelled')
+        .or(`start_time.lt.${endTime}:00,end_time.gt.${time}:00`)
+
+      if (!conflicts || conflicts.length === 0) {
+        resolvedStylistId = candidate.id
+        break
+      }
+    }
+
+    if (!resolvedStylistId) {
+      return NextResponse.json({ error: 'あいにく、ご指定の日時にご案内できるスタッフがおりません。別の日時をお選びください。' }, { status: 409 })
+    }
   }
 
   // Upsert customer (find by phone or email, or create new)
@@ -97,7 +148,7 @@ export async function POST(req: NextRequest) {
     .from('reservations')
     .insert({
       customer_id: customerId,
-      stylist_id: stylistId,
+      stylist_id: resolvedStylistId,
       menu_id: menuId,
       reservation_date: date,
       start_time: `${time}:00`,
